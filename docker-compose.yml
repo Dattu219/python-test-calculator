@@ -1,0 +1,39 @@
+version: "3.9"
+
+ 
+
+networks:
+  local:
+    driver: bridge
+
+ 
+
+services:
+
+ 
+
+  db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - '5432:5432'
+    networks:
+      - local
+
+ 
+python-test-calculator:
+    image: python-test-calculator
+    build:
+      context: ..
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    volumes:
+      - '../src:/src'
+      - '../tests:/tests'
+    networks:
+      - local
